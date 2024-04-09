@@ -1,5 +1,8 @@
 package com.africa.semicolon.services;
 
-public interface UserService {
+import com.africa.semicolon.dtos.request.RegisterUserRequest;
+import com.africa.semicolon.dtos.response.RegisterUserResponse;
 
+public interface UserService {
+    RegisterUserResponse register(RegisterUserRequest registerUserRequest);
 }
