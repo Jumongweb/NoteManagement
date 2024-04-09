@@ -5,4 +5,5 @@ import com.africa.semicolon.dtos.response.RegisterUserResponse;
 
 public interface UserService {
     RegisterUserResponse register(RegisterUserRequest registerUserRequest);
+    Long countUsers();
 }
