@@ -1,18 +1,16 @@
 package com.africa.semicolon.services;
 
+import com.africa.semicolon.data.model.Note;
 import com.africa.semicolon.data.model.User;
+import com.africa.semicolon.data.repositories.NoteRepository;
 import com.africa.semicolon.data.repositories.UserRepository;
-import com.africa.semicolon.dtos.request.RegisterUserRequest;
-import com.africa.semicolon.dtos.request.UpdateUserRequest;
-import com.africa.semicolon.dtos.response.DeleteResponse;
-import com.africa.semicolon.dtos.response.RegisterUserResponse;
-import com.africa.semicolon.dtos.response.UpdateUserResponse;
-import com.africa.semicolon.exceptions.InvalidPasswordException;
-import com.africa.semicolon.exceptions.UsernameAlreadyExistException;
-import com.africa.semicolon.exceptions.UserNotFoundException;
+import com.africa.semicolon.dtos.request.*;
+import com.africa.semicolon.dtos.response.*;
+import com.africa.semicolon.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.africa.semicolon.utils.Mapper.*;
@@ -22,6 +20,9 @@ public class UserServiceImpl implements  UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private NoteRepository noteRepository;
     @Override
     public RegisterUserResponse register(RegisterUserRequest registerUserRequest) {
         String username = registerUserRequest.getUsername();
@@ -78,5 +79,71 @@ public class UserServiceImpl implements  UserService {
         UpdateUserResponse updateResponse = new UpdateUserResponse();
         updateResponse.setMessage("Updated successfully");
         return updateResponse;
+    }
+
+    @Override
+    public LoginResponse login(LoginRequest loginRequest) {
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
+        validate(username, password);
+        User user = findByUsername(username);
+        user.setLoggedIn(true);
+        User savedUser = userRepository.save(user);
+        return mapLoginResponse(savedUser);
+    }
+
+    @Override
+    public LogoutResponse logout(LogoutRequest logoutRequest) {
+        String username = logoutRequest.getUsername();
+        User user = findByUsername(username);
+        if (user.getUsername().equals(username)) user.setLoggedIn(false);
+        User savedUser = userRepository.save(user);
+        return mapLogoutResponse(savedUser);
+    }
+
+    @Override
+    public AddNoteResponse addNote(AddNoteRequest addNoteRequest) {
+        Note note = mapAddNote(addNoteRequest);
+        validateNote(note.getTitle());
+        User user = findByUsername(note.getUsername());
+        validateLogin(user.getUsername());
+        noteRepository.save(note);
+        List<Note> userNote = user.getNotes();
+        userNote.add(note);
+        user.setNotes(userNote);
+        userRepository.save(user);
+        return mapAddNoteResponse(note);
+
+    }
+
+    @Override
+    public Note findNoteBy(String username1, String title) {
+        for (Note note : findAllNotesBelongingToUser(username1)){
+            if (note.getTitle().equals(title)){
+                return note;
+            }
+        }
+        throw new NoteNotFoundException("Note does not exist");
+    }
+
+    @Override
+    public List<Note> findAllNotesBelongingToUser(String username) {
+        return noteRepository.findNoteByUsername(username);
+    }
+
+    private void validateNote(String title) {
+        for (Note note : noteRepository.findAll()){
+            if (note.getTitle().equals(title)) throw new NoteExistException("Note already exist with the same title");
+        }
+    }
+
+    private void validateLogin(String username) {
+        User user = userRepository.findByUsername(username);
+        if (!(user.isLoggedIn())) throw new LoginException("You need to be logged in to use this service");
+    }
+
+    public void validate(String username, String password){
+        User user = findByUsername(username);
+        if (!(user.getPassword().equals(password))) { throw new InvalidPasswordException("Invalid password");}
     }
 }

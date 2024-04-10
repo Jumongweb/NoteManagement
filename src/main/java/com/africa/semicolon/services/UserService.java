@@ -1,12 +1,11 @@
 package com.africa.semicolon.services;
 
+import com.africa.semicolon.data.model.Note;
 import com.africa.semicolon.data.model.User;
-import com.africa.semicolon.dtos.request.RegisterUserRequest;
-import com.africa.semicolon.dtos.request.UpdateUserRequest;
-import com.africa.semicolon.dtos.response.DeleteResponse;
-import com.africa.semicolon.dtos.response.RegisterUserResponse;
-import com.africa.semicolon.dtos.response.UpdateUserResponse;
+import com.africa.semicolon.dtos.request.*;
+import com.africa.semicolon.dtos.response.*;
 
+import java.net.ContentHandler;
 import java.util.List;
 
 public interface UserService {
@@ -20,4 +19,14 @@ public interface UserService {
     DeleteResponse deleteUser(String username);
 
     UpdateUserResponse updateUser(String username, String password, UpdateUserRequest update);
+
+    LoginResponse login(LoginRequest loginRequest);
+
+    LogoutResponse logout(LogoutRequest logoutRequest);
+
+    AddNoteResponse addNote(AddNoteRequest addNoteRequest);
+
+    Note findNoteBy(String username1, String title1);
+
+    List<Note> findAllNotesBelongingToUser(String username1);
 }

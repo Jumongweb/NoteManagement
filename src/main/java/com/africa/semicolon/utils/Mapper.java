@@ -1,10 +1,13 @@
 package com.africa.semicolon.utils;
 
+import com.africa.semicolon.data.model.Note;
 import com.africa.semicolon.data.model.User;
+import com.africa.semicolon.dtos.request.AddNoteRequest;
 import com.africa.semicolon.dtos.request.RegisterUserRequest;
 import com.africa.semicolon.dtos.request.UpdateUserRequest;
-import com.africa.semicolon.dtos.response.DeleteResponse;
-import com.africa.semicolon.dtos.response.RegisterUserResponse;
+import com.africa.semicolon.dtos.response.*;
+
+import java.time.format.DateTimeFormatter;
 
 public class Mapper {
     public static User mapRegisterUser(RegisterUserRequest registerUserRequest) {
@@ -42,4 +45,31 @@ public class Mapper {
         response.setMessage("Updated successfully");
         return response;
     }
+
+    public static LoginResponse mapLoginResponse(User user) {
+        LoginResponse response = new LoginResponse();
+        response.setMessage("Login successful");
+        return response;
+    }
+
+    public static LogoutResponse mapLogoutResponse(User user) {
+        LogoutResponse response = new LogoutResponse();
+        response.setMessage("Logout successful");
+        return response;
+    }
+
+    public static Note mapAddNote(AddNoteRequest addNoteRequest){
+        Note note = new Note();
+        note.setTitle(addNoteRequest.getTitle());
+        note.setContent(addNoteRequest.getContent());
+        note.setUsername(addNoteRequest.getUsername());
+        return note;
+    }
+
+    public static AddNoteResponse mapAddNoteResponse(Note note){
+        AddNoteResponse response = new AddNoteResponse();
+        response.setMessage("Note Added successfully");
+        return response;
+    }
+
 }
