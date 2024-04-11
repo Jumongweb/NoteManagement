@@ -7,6 +7,7 @@ import com.africa.semicolon.data.repositories.UserRepository;
 import com.africa.semicolon.dtos.request.*;
 import com.africa.semicolon.dtos.response.*;
 import com.africa.semicolon.exceptions.*;
+import com.mongodb.internal.bulk.DeleteRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,12 +55,13 @@ public class UserServiceImpl implements  UserService {
 
     @Override
     public List<User> findAllUsers() {
+        if (userRepository.count() < 1) throw new UserNotFoundException("This repository is empty");
         return userRepository.findAll();
     }
 
     @Override
-    public DeleteResponse deleteUser(String username) {
-        User user = findByUsername(username);
+    public DeleteResponse deleteUser(DeleteUserRequest deleteUserRequest) {
+        User user = findByUsername(deleteUserRequest.getUsername());
         userRepository.delete(user);
         return mapDeleteUser(user);
     }

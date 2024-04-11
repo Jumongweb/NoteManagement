@@ -16,7 +16,7 @@ public interface UserService {
 
     List<User> findAllUsers();
 
-    DeleteResponse deleteUser(String username);
+    DeleteResponse deleteUser(DeleteUserRequest deleteUserRequest);
 
     UpdateUserResponse updateUser(String username, String password, UpdateUserRequest update);
 

@@ -150,13 +150,17 @@ public class UserServiceImplTest {
         userRequest.setLastName("lastName");
         userService.register(userRequest);
         assertEquals(1, userService.countUsers());
-        userService.deleteUser("username1");
+        DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
+        deleteUserRequest.setUsername("username1");
+        userService.deleteUser(deleteUserRequest);
         assertEquals(0, userService.countUsers());
     }
 
     @Test
     public void testThatUserServiceThrowExceptionIfUserIsNotFoundToDelete() {
-        assertThrows(UserNotFoundException.class, () -> userService.deleteUser("wrongUsername"));
+        DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
+        deleteUserRequest.setUsername("unregisteredUsername");
+        assertThrows(UserNotFoundException.class, () -> userService.deleteUser(deleteUserRequest));
     }
 
     @Test

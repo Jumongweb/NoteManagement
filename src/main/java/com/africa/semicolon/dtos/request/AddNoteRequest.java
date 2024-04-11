@@ -7,5 +7,5 @@ public class AddNoteRequest {
     private String title;
     private String content;
     private String username;
-    private String dateCreated;
+    //private String dateCreated;
 }
