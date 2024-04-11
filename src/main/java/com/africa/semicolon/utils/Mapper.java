@@ -78,4 +78,10 @@ public class Mapper {
         return response;
     }
 
+    public static UpdateNoteResponse mapUpdateNoteResponse(Note note){
+        UpdateNoteResponse response = new UpdateNoteResponse();
+        response.setMessage("Note Updated successfully");
+        return response;
+    }
+
 }

@@ -271,5 +271,36 @@ public class NoteServiceImplTest {
         assertEquals(1, noteService.findByUsername("username1").getNotes().size());
     }
 
+    @Test
+    public void testThatNoteServiceCanUpdateNote(){
+        RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
+        registerUserRequest1.setUsername("username1");
+        registerUserRequest1.setPassword("password");
+        registerUserRequest1.setFirstName("firstName");
+        registerUserRequest1.setLastName("lastName");
+        userService.register(registerUserRequest1);
+
+        LoginRequest loginRequest1 = new LoginRequest();
+        loginRequest1.setUsername("username1");
+        loginRequest1.setPassword("password");
+        userService.login(loginRequest1);
+        AddNoteRequest addNoteRequest1 = new AddNoteRequest();
+        addNoteRequest1.setUsername("username1");
+        addNoteRequest1.setTitle("title1");
+        addNoteRequest1.setContent("Content of the note");
+        noteService.addNote(addNoteRequest1);
+        assertEquals("Content of the note", noteService.findNoteBy("username1", "title1").getContent());
+        assertEquals(1, noteService.count());
+        assertEquals(1, noteService.findByUsername("username1").getNotes().size());
+        UpdateNoteRequest updateNoteRequest = new UpdateNoteRequest();
+        updateNoteRequest.setUsername("username1");
+        updateNoteRequest.setTitle("title1");
+        updateNoteRequest.setContent("Updated Content of the note");
+        noteService.updateNoteBy(updateNoteRequest);
+        assertEquals("Updated Content of the note", noteService.findNoteBy("username1", "title1").getContent());
+
+        assertEquals(1, noteService.count());
+        assertEquals(1, noteService.findByUsername("username1").getNotes().size());
+    }
 
 }

@@ -6,8 +6,10 @@ import com.africa.semicolon.data.repositories.NoteRepository;
 import com.africa.semicolon.data.repositories.UserRepository;
 import com.africa.semicolon.dtos.request.AddNoteRequest;
 import com.africa.semicolon.dtos.request.DeleteNoteRequest;
+import com.africa.semicolon.dtos.request.UpdateNoteRequest;
 import com.africa.semicolon.dtos.response.AddNoteResponse;
 import com.africa.semicolon.dtos.response.DeleteResponse;
+import com.africa.semicolon.dtos.response.UpdateNoteResponse;
 import com.africa.semicolon.exceptions.LoginException;
 import com.africa.semicolon.exceptions.NoteExistException;
 import com.africa.semicolon.exceptions.NoteNotFoundException;
@@ -84,6 +86,17 @@ public class NoteServiceImpl implements NoteService{
         user.setNotes(notes);
         userRepository.save(user);
         return mapDeleteNoteResponse(note);
+    }
+
+    @Override
+    public UpdateNoteResponse updateNoteBy(UpdateNoteRequest updateNoteRequest) {
+        validateLogin(updateNoteRequest.getUsername());
+        User user = findByUsername(updateNoteRequest.getUsername());
+        Note note = findNoteBy(updateNoteRequest.getUsername(), updateNoteRequest.getTitle());
+        note.setTitle(updateNoteRequest.getTitle());
+        note.setContent(updateNoteRequest.getContent());
+        noteRepository.save(note);
+        return mapUpdateNoteResponse(note);
     }
 
 

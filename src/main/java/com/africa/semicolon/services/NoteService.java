@@ -4,8 +4,10 @@ import com.africa.semicolon.data.model.Note;
 import com.africa.semicolon.data.model.User;
 import com.africa.semicolon.dtos.request.AddNoteRequest;
 import com.africa.semicolon.dtos.request.DeleteNoteRequest;
+import com.africa.semicolon.dtos.request.UpdateNoteRequest;
 import com.africa.semicolon.dtos.response.AddNoteResponse;
 import com.africa.semicolon.dtos.response.DeleteResponse;
+import com.africa.semicolon.dtos.response.UpdateNoteResponse;
 import com.mongodb.internal.bulk.DeleteRequest;
 
 import java.net.ContentHandler;
@@ -23,4 +25,6 @@ public interface NoteService {
     Note findNoteBy(String username, String title);
 
     DeleteResponse deleteNoteBy(DeleteNoteRequest deleteNoteRequest);
+
+    UpdateNoteResponse updateNoteBy(UpdateNoteRequest updateNoteRequest);
 }
