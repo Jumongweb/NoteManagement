@@ -63,7 +63,7 @@ public class UserServiceImplTest {
         registerUserRequest2.setPassword("password");
         registerUserRequest2.setFirstName("firstName");
         registerUserRequest2.setLastName("lastName");
-        assertThrows(UsernameAlreadyExistException.class, () -> userService.register(registerUserRequest2));
+        assertThrows(UsernameAlreadyExistException.class, ()-> userService.register(registerUserRequest2));
     }
 
     @Test
@@ -88,7 +88,6 @@ public class UserServiceImplTest {
         registerUserRequest3.setFirstName("firstName");
         registerUserRequest3.setLastName("lastName");
         userService.register(registerUserRequest3);
-
         assertEquals(3, userService.countUsers());
     }
 
