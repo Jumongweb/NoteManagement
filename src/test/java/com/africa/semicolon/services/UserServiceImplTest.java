@@ -29,14 +29,17 @@ public class UserServiceImplTest {
     @Autowired
     private NoteRepository noteRepository;
 
+    @Autowired
+    private NoteService noteService;
+
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         userRepository.deleteAll();
         noteRepository.deleteAll();
     }
 
     @Test
-    public void testThatUserServiceCanSaveUser(){
+    public void testThatUserServiceCanSaveUser() {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
         registerUserRequest.setUsername("username");
         registerUserRequest.setPassword("password");
@@ -47,7 +50,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testThatUserServiceCannotSaveUserWithTheSameUsername(){
+    public void testThatUserServiceCannotSaveUserWithTheSameUsername() {
         RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
         registerUserRequest1.setUsername("username");
         registerUserRequest1.setPassword("password");
@@ -60,11 +63,11 @@ public class UserServiceImplTest {
         registerUserRequest2.setPassword("password");
         registerUserRequest2.setFirstName("firstName");
         registerUserRequest2.setLastName("lastName");
-        assertThrows(UsernameAlreadyExistException.class, ()->userService.register(registerUserRequest2));
+        assertThrows(UsernameAlreadyExistException.class, () -> userService.register(registerUserRequest2));
     }
 
     @Test
-    public void testSave3UserAndUserServiceCountIs3(){
+    public void testSave3UserAndUserServiceCountIs3() {
         RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
         registerUserRequest1.setUsername("username1");
         registerUserRequest1.setPassword("password");
@@ -90,7 +93,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testThatUserServiceCanFindUserByUsername(){
+    public void testThatUserServiceCanFindUserByUsername() {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
         registerUserRequest.setUsername("username");
         registerUserRequest.setPassword("password");
@@ -102,12 +105,12 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testThatUserServiceThrowExceptionIfUserIsNotFound(){
-        assertThrows(UserNotFoundException.class, ()->userService.findByUsername("wrongUsername"));
+    public void testThatUserServiceThrowExceptionIfUserIsNotFound() {
+        assertThrows(UserNotFoundException.class, () -> userService.findByUsername("wrongUsername"));
     }
 
     @Test
-    public void testThatUserServiceCanFindAllUsers(){
+    public void testThatUserServiceCanFindAllUsers() {
         RegisterUserRequest userRequest1 = new RegisterUserRequest();
         userRequest1.setUsername("username1");
         userRequest1.setPassword("password");
@@ -140,7 +143,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testThatUserServiceCanDeleteUser(){
+    public void testThatUserServiceCanDeleteUser() {
         RegisterUserRequest userRequest = new RegisterUserRequest();
         userRequest.setUsername("username1");
         userRequest.setPassword("password");
@@ -153,12 +156,12 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testThatUserServiceThrowExceptionIfUserIsNotFoundToDelete(){
-        assertThrows(UserNotFoundException.class, ()->userService.deleteUser("wrongUsername"));
+    public void testThatUserServiceThrowExceptionIfUserIsNotFoundToDelete() {
+        assertThrows(UserNotFoundException.class, () -> userService.deleteUser("wrongUsername"));
     }
 
     @Test
-    public void testThatUserServiceCanUpdateUser(){
+    public void testThatUserServiceCanUpdateUser() {
         RegisterUserRequest userRequest = new RegisterUserRequest();
         userRequest.setUsername("username1");
         userRequest.setPassword("password");
@@ -173,14 +176,14 @@ public class UserServiceImplTest {
         updateUserRequest.setUsername("newUsername");
         updateUserRequest.setPassword("newPassword");
         userService.updateUser("username1", "password", updateUserRequest);
-        assertThrows(UserNotFoundException.class, ()->userService.findByUsername("username1"));
+        assertThrows(UserNotFoundException.class, () -> userService.findByUsername("username1"));
         User user = userService.findByUsername("newUsername");
         assertEquals("newFirstName", user.getFirstName());
         assertEquals("newLastName", user.getLastName());
     }
 
     @Test
-    public void testThatUserServiceCannotUpdateUserWithWrongUsername(){
+    public void testThatUserServiceCannotUpdateUserWithWrongUsername() {
         RegisterUserRequest userRequest = new RegisterUserRequest();
         userRequest.setUsername("username1");
         userRequest.setPassword("password");
@@ -194,11 +197,11 @@ public class UserServiceImplTest {
         updateUserRequest.setLastName("newLastName");
         updateUserRequest.setUsername("newUsername");
         updateUserRequest.setPassword("newPassword");
-        assertThrows(UserNotFoundException.class, ()->userService.updateUser("WrongUsername", "password", updateUserRequest));
+        assertThrows(UserNotFoundException.class, () -> userService.updateUser("WrongUsername", "password", updateUserRequest));
     }
 
     @Test
-    public void testThatUserServiceCannotUpdateUserWithWrongPassword(){
+    public void testThatUserServiceCannotUpdateUserWithWrongPassword() {
         RegisterUserRequest userRequest = new RegisterUserRequest();
         userRequest.setUsername("username1");
         userRequest.setPassword("password");
@@ -212,11 +215,11 @@ public class UserServiceImplTest {
         updateUserRequest.setLastName("newLastName");
         updateUserRequest.setUsername("newUsername");
         updateUserRequest.setPassword("newPassword");
-        assertThrows(InvalidPasswordException.class, ()->userService.updateUser("username1", "wrongPassword", updateUserRequest));
+        assertThrows(InvalidPasswordException.class, () -> userService.updateUser("username1", "wrongPassword", updateUserRequest));
     }
 
     @Test
-    public void testThatUserCanLoginIfTheyAreRegisteredUser(){
+    public void testThatUserCanLoginIfTheyAreRegisteredUser() {
         RegisterUserRequest userRequest = new RegisterUserRequest();
         userRequest.setUsername("username1");
         userRequest.setPassword("password");
@@ -237,15 +240,15 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testThatUserCannotLoginIfTheyAreNotRegisteredUser(){
+    public void testThatUserCannotLoginIfTheyAreNotRegisteredUser() {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername("unregisteredUser");
         loginRequest.setPassword("password");
-        assertThrows(UserNotFoundException.class, ()->userService.login(loginRequest));
+        assertThrows(UserNotFoundException.class, () -> userService.login(loginRequest));
     }
 
     @Test
-    public void testThatUserCannotLoginWithWrongPasswordIfTheyAreRegisteredUser(){
+    public void testThatUserCannotLoginWithWrongPasswordIfTheyAreRegisteredUser() {
         RegisterUserRequest userRequest = new RegisterUserRequest();
         userRequest.setUsername("username1");
         userRequest.setPassword("password");
@@ -259,13 +262,13 @@ public class UserServiceImplTest {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername("username1");
         loginRequest.setPassword("wrongPassword");
-        assertThrows(InvalidPasswordException.class, ()->userService.login(loginRequest));
+        assertThrows(InvalidPasswordException.class, () -> userService.login(loginRequest));
         user = userService.findByUsername("username1");
         assertFalse(user.isLoggedIn());
     }
 
     @Test
-    public void testThatUserCanLogout(){
+    public void testThatUserCanLogout() {
         RegisterUserRequest userRequest = new RegisterUserRequest();
         userRequest.setUsername("username1");
         userRequest.setPassword("password");
@@ -290,7 +293,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testThatUserCannotLogoutWithWrongUsername(){
+    public void testThatUserCannotLogoutWithWrongUsername() {
         RegisterUserRequest userRequest = new RegisterUserRequest();
         userRequest.setUsername("username1");
         userRequest.setPassword("password");
@@ -309,13 +312,13 @@ public class UserServiceImplTest {
         assertTrue(user.isLoggedIn());
         LogoutRequest logoutRequest = new LogoutRequest();
         logoutRequest.setUsername("wrongUsername");
-        assertThrows(UserNotFoundException.class, ()->userService.logout(logoutRequest));
+        assertThrows(UserNotFoundException.class, () -> userService.logout(logoutRequest));
         user = userService.findByUsername("username1");
         assertTrue(user.isLoggedIn());
     }
 
     @Test
-    public void testLoginInThreeDifferentUsers(){
+    public void testLoginInThreeDifferentUsers() {
         RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
         registerUserRequest1.setUsername("username1");
         registerUserRequest1.setPassword("password");
@@ -357,56 +360,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testLoginInThreeDifferentUsersLogoutTheMiddle(){
-        RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
-        registerUserRequest1.setUsername("username1");
-        registerUserRequest1.setPassword("password");
-        registerUserRequest1.setFirstName("firstName");
-        registerUserRequest1.setLastName("lastName");
-        userService.register(registerUserRequest1);
-
-        RegisterUserRequest registerUserRequest2 = new RegisterUserRequest();
-        registerUserRequest2.setUsername("username2");
-        registerUserRequest2.setPassword("password");
-        registerUserRequest2.setFirstName("firstName");
-        registerUserRequest2.setLastName("lastName");
-        userService.register(registerUserRequest2);
-
-        RegisterUserRequest registerUserRequest3 = new RegisterUserRequest();
-        registerUserRequest3.setUsername("username3");
-        registerUserRequest3.setPassword("password");
-        registerUserRequest3.setFirstName("firstName");
-        registerUserRequest3.setLastName("lastName");
-        userService.register(registerUserRequest3);
-        assertEquals(3, userService.countUsers());
-
-        LoginRequest loginRequest1 = new LoginRequest();
-        LoginRequest loginRequest2 = new LoginRequest();
-        LoginRequest loginRequest3 = new LoginRequest();
-        loginRequest1.setUsername("username1");
-        loginRequest1.setPassword("password");
-        loginRequest2.setUsername("username2");
-        loginRequest2.setPassword("password");
-        loginRequest3.setUsername("username3");
-        loginRequest3.setPassword("password");
-
-        userService.login(loginRequest1);
-        userService.login(loginRequest2);
-        userService.login(loginRequest3);
-        assertTrue(userService.findByUsername("username1").isLoggedIn());
-        assertTrue(userService.findByUsername("username2").isLoggedIn());
-        assertTrue(userService.findByUsername("username3").isLoggedIn());
-
-        LogoutRequest logoutRequest = new LogoutRequest();
-        logoutRequest.setUsername("username2");
-        userService.logout(logoutRequest);
-        assertTrue(userService.findByUsername("username1").isLoggedIn());
-        assertFalse(userService.findByUsername("username2").isLoggedIn());
-        assertTrue(userService.findByUsername("username3").isLoggedIn());
-    }
-
-    @Test
-    public void testLoginInThreeDifferentUsersLogoutTheMiddleAndLoginAgain(){
+    public void testLoginInThreeDifferentUsersLogoutTheMiddle() {
         RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
         registerUserRequest1.setUsername("username1");
         registerUserRequest1.setPassword("password");
@@ -452,6 +406,55 @@ public class UserServiceImplTest {
         assertTrue(userService.findByUsername("username1").isLoggedIn());
         assertFalse(userService.findByUsername("username2").isLoggedIn());
         assertTrue(userService.findByUsername("username3").isLoggedIn());
+    }
+
+    @Test
+    public void testLoginInThreeDifferentUsersLogoutTheMiddleAndLoginAgain() {
+        RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
+        registerUserRequest1.setUsername("username1");
+        registerUserRequest1.setPassword("password");
+        registerUserRequest1.setFirstName("firstName");
+        registerUserRequest1.setLastName("lastName");
+        userService.register(registerUserRequest1);
+
+        RegisterUserRequest registerUserRequest2 = new RegisterUserRequest();
+        registerUserRequest2.setUsername("username2");
+        registerUserRequest2.setPassword("password");
+        registerUserRequest2.setFirstName("firstName");
+        registerUserRequest2.setLastName("lastName");
+        userService.register(registerUserRequest2);
+
+        RegisterUserRequest registerUserRequest3 = new RegisterUserRequest();
+        registerUserRequest3.setUsername("username3");
+        registerUserRequest3.setPassword("password");
+        registerUserRequest3.setFirstName("firstName");
+        registerUserRequest3.setLastName("lastName");
+        userService.register(registerUserRequest3);
+        assertEquals(3, userService.countUsers());
+
+        LoginRequest loginRequest1 = new LoginRequest();
+        LoginRequest loginRequest2 = new LoginRequest();
+        LoginRequest loginRequest3 = new LoginRequest();
+        loginRequest1.setUsername("username1");
+        loginRequest1.setPassword("password");
+        loginRequest2.setUsername("username2");
+        loginRequest2.setPassword("password");
+        loginRequest3.setUsername("username3");
+        loginRequest3.setPassword("password");
+
+        userService.login(loginRequest1);
+        userService.login(loginRequest2);
+        userService.login(loginRequest3);
+        assertTrue(userService.findByUsername("username1").isLoggedIn());
+        assertTrue(userService.findByUsername("username2").isLoggedIn());
+        assertTrue(userService.findByUsername("username3").isLoggedIn());
+
+        LogoutRequest logoutRequest = new LogoutRequest();
+        logoutRequest.setUsername("username2");
+        userService.logout(logoutRequest);
+        assertTrue(userService.findByUsername("username1").isLoggedIn());
+        assertFalse(userService.findByUsername("username2").isLoggedIn());
+        assertTrue(userService.findByUsername("username3").isLoggedIn());
 
         userService.login(loginRequest2);
         assertTrue(userService.findByUsername("username1").isLoggedIn());
@@ -460,7 +463,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testThatUserServiceCanAddNoteToUserList(){
+    public void testThatUserServiceCanAddNoteToUserList() {
         RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
         registerUserRequest1.setUsername("username1");
         registerUserRequest1.setPassword("password");
@@ -483,7 +486,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testThatUserServiceCanAddNoteWithSameTitle(){
+    public void testThatUserServiceCanAddNoteWithSameTitle() {
         RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
         registerUserRequest1.setUsername("username1");
         registerUserRequest1.setPassword("password");
@@ -503,11 +506,35 @@ public class UserServiceImplTest {
         userService.addNote(addNoteRequest);
         assertEquals(1, noteRepository.count());
         assertEquals(1, userRepository.findByUsername("username1").getNotes().size());
-        assertThrows(NoteExistException.class, ()->userService.addNote(addNoteRequest));
+        assertThrows(NoteExistException.class, () -> userService.addNote(addNoteRequest));
     }
 
     @Test
-    public void testThatUserServiceCannotAddNoteToUserListIfTheyAreNotLoggedIn(){
+    public void testThatNoteServiceCannotAddNoteWithSameTitle() {
+        RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
+        registerUserRequest1.setUsername("username1");
+        registerUserRequest1.setPassword("password");
+        registerUserRequest1.setFirstName("firstName");
+        registerUserRequest1.setLastName("lastName");
+        userService.register(registerUserRequest1);
+
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setUsername("username1");
+        loginRequest.setPassword("password");
+        userService.login(loginRequest);
+
+        AddNoteRequest addNoteRequest = new AddNoteRequest();
+        addNoteRequest.setUsername("username1");
+        addNoteRequest.setTitle("title");
+        addNoteRequest.setContent("Content of the note");
+        userService.addNote(addNoteRequest);
+        assertEquals(1, noteRepository.count());
+        assertEquals(1, userRepository.findByUsername("username1").getNotes().size());
+        assertThrows(NoteExistException.class, () -> noteService.addNote(addNoteRequest));
+    }
+
+    @Test
+    public void testThatUserServiceCannotAddNoteToUserListIfTheyAreNotLoggedIn() {
         RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
         registerUserRequest1.setUsername("username1");
         registerUserRequest1.setPassword("password");
@@ -519,11 +546,11 @@ public class UserServiceImplTest {
         addNoteRequest.setUsername("username1");
         addNoteRequest.setTitle("title");
         addNoteRequest.setContent("Content of the note");
-        assertThrows(LoginException.class, ()->userService.addNote(addNoteRequest));
+        assertThrows(LoginException.class, () -> userService.addNote(addNoteRequest));
     }
 
     @Test
-    public void test3DifferentUsersCreateOneNoteEach(){
+    public void test3DifferentUsersCreateOneNoteEach() {
         RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
         registerUserRequest1.setUsername("username1");
         registerUserRequest1.setPassword("password");
@@ -583,42 +610,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testOneUserCreate3Note_NoteServiceCountIs3(){
-        RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
-        registerUserRequest1.setUsername("username1");
-        registerUserRequest1.setPassword("password");
-        registerUserRequest1.setFirstName("firstName");
-        registerUserRequest1.setLastName("lastName");
-        userService.register(registerUserRequest1);
-
-        LoginRequest loginRequest1 = new LoginRequest();
-        loginRequest1.setUsername("username1");
-        loginRequest1.setPassword("password");
-        userService.login(loginRequest1);
-        AddNoteRequest addNoteRequest1 = new AddNoteRequest();
-        addNoteRequest1.setUsername("username1");
-        addNoteRequest1.setTitle("title1");
-        addNoteRequest1.setContent("Content of the note");
-        userService.addNote(addNoteRequest1);
-
-        AddNoteRequest addNoteRequest2 = new AddNoteRequest();
-        addNoteRequest2.setUsername("username1");
-        addNoteRequest2.setTitle("title2");
-        addNoteRequest2.setContent("Content of the note");
-        userService.addNote(addNoteRequest2);
-
-        AddNoteRequest addNoteRequest3 = new AddNoteRequest();
-        addNoteRequest3.setUsername("username1");
-        addNoteRequest3.setTitle("title3");
-        addNoteRequest3.setContent("Content of the note");
-        userService.addNote(addNoteRequest3);
-
-        assertEquals(3, noteRepository.count());
-        assertEquals(3, userRepository.findByUsername("username1").getNotes().size());
-    }
-
-    @Test
-    public void testThatUserServiceCanFindAllNoteBelongingToOneUser(){
+    public void testThatUserServiceCanFindAllNoteBelongingToOneUser() {
         RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
         registerUserRequest1.setUsername("username1");
         registerUserRequest1.setPassword("password");
@@ -654,7 +646,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testThatUserServiceCanFindNote(){
+    public void testThatNoteServiceCanFindAllNoteBelongingToOneUser() {
         RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
         registerUserRequest1.setUsername("username1");
         registerUserRequest1.setPassword("password");
@@ -671,7 +663,23 @@ public class UserServiceImplTest {
         addNoteRequest1.setTitle("title1");
         addNoteRequest1.setContent("Content of the note");
         userService.addNote(addNoteRequest1);
-        assertEquals("Content of the note", userService.findNoteBy("username1", "title1").getContent());
+
+        AddNoteRequest addNoteRequest2 = new AddNoteRequest();
+        addNoteRequest2.setUsername("username1");
+        addNoteRequest2.setTitle("title2");
+        addNoteRequest2.setContent("Content of the note");
+        userService.addNote(addNoteRequest2);
+
+        AddNoteRequest addNoteRequest3 = new AddNoteRequest();
+        addNoteRequest3.setUsername("username1");
+        addNoteRequest3.setTitle("title3");
+        addNoteRequest3.setContent("Content of the note");
+        userService.addNote(addNoteRequest3);
+
+        List<Note> sampleNote = userService.findAllNotesBelongingToUser("username1");
+        assertEquals(3, noteRepository.count());
+        assertEquals(sampleNote.size(), userService.findByUsername("username1").getNotes().size());
     }
+
 
 }
