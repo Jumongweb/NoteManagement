@@ -176,11 +176,10 @@ public class UserServiceImplTest {
         UpdateUserRequest updateUserRequest = new UpdateUserRequest();
         updateUserRequest.setFirstName("newFirstName");
         updateUserRequest.setLastName("newLastName");
-        updateUserRequest.setUsername("newUsername");
-        updateUserRequest.setPassword("newPassword");
-        userService.updateUser("username1", "password", updateUserRequest);
-        assertThrows(UserNotFoundException.class, () -> userService.findByUsername("username1"));
-        User user = userService.findByUsername("newUsername");
+        updateUserRequest.setUsername("username1");
+        updateUserRequest.setPassword("password");
+        userService.updateUser(updateUserRequest);
+        User user = userService.findByUsername("username1");
         assertEquals("newFirstName", user.getFirstName());
         assertEquals("newLastName", user.getLastName());
     }
@@ -200,7 +199,7 @@ public class UserServiceImplTest {
         updateUserRequest.setLastName("newLastName");
         updateUserRequest.setUsername("newUsername");
         updateUserRequest.setPassword("newPassword");
-        assertThrows(UserNotFoundException.class, () -> userService.updateUser("WrongUsername", "password", updateUserRequest));
+        assertThrows(UserNotFoundException.class, () -> userService.updateUser(updateUserRequest));
     }
 
     @Test
@@ -216,9 +215,9 @@ public class UserServiceImplTest {
         UpdateUserRequest updateUserRequest = new UpdateUserRequest();
         updateUserRequest.setFirstName("newFirstName");
         updateUserRequest.setLastName("newLastName");
-        updateUserRequest.setUsername("newUsername");
-        updateUserRequest.setPassword("newPassword");
-        assertThrows(InvalidPasswordException.class, () -> userService.updateUser("username1", "wrongPassword", updateUserRequest));
+        updateUserRequest.setUsername("username1");
+        updateUserRequest.setPassword("wrongPassword");
+        assertThrows(InvalidPasswordException.class, () -> userService.updateUser(updateUserRequest));
     }
 
     @Test

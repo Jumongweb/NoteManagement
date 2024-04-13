@@ -18,7 +18,7 @@ public interface UserService {
 
     DeleteResponse deleteUser(DeleteUserRequest deleteUserRequest);
 
-    UpdateUserResponse updateUser(String username, String password, UpdateUserRequest update);
+    UpdateUserResponse updateUser(UpdateUserRequest update);
 
     LoginResponse login(LoginRequest loginRequest);
 

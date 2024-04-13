@@ -1,9 +1,6 @@
 package com.africa.semicolon.controllers;
 
-import com.africa.semicolon.dtos.request.DeleteUserRequest;
-import com.africa.semicolon.dtos.request.LoginRequest;
-import com.africa.semicolon.dtos.request.LogoutRequest;
-import com.africa.semicolon.dtos.request.RegisterUserRequest;
+import com.africa.semicolon.dtos.request.*;
 import com.africa.semicolon.dtos.response.*;
 import com.africa.semicolon.exceptions.NoteManagementException;
 import com.africa.semicolon.services.UserService;
@@ -64,6 +61,25 @@ public class UserController {
         try{
             DeleteResponse deleteResponse = userService.deleteUser(deleteUserRequest);
             return new ResponseEntity<>(new ApiResponse(true, deleteResponse), HttpStatus.OK);
+        } catch (NoteManagementException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("getAllUsers")
+    public ResponseEntity<?> getAllUsers(){
+        try{
+            return new ResponseEntity<>(new ApiResponse(true, userService.findAllUsers()), HttpStatus.OK);
+        } catch (NoteManagementException e){
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("updateUser")
+    public ResponseEntity<?> updateUser(@RequestBody UpdateUserRequest updateUserRequest){
+        try{
+            UpdateUserResponse response = userService.updateUser(updateUserRequest);
+            return new ResponseEntity<>(new ApiResponse(true, response), HttpStatus.OK);
         } catch (NoteManagementException e) {
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }

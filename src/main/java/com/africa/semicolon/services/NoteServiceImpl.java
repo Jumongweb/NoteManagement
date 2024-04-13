@@ -8,6 +8,7 @@ import com.africa.semicolon.dtos.request.AddNoteRequest;
 import com.africa.semicolon.dtos.request.DeleteNoteRequest;
 import com.africa.semicolon.dtos.request.UpdateNoteRequest;
 import com.africa.semicolon.dtos.response.AddNoteResponse;
+import com.africa.semicolon.dtos.response.DeleteNoteResponse;
 import com.africa.semicolon.dtos.response.DeleteResponse;
 import com.africa.semicolon.dtos.response.UpdateNoteResponse;
 import com.africa.semicolon.exceptions.LoginException;
@@ -76,7 +77,7 @@ public class NoteServiceImpl implements NoteService{
     }
 
     @Override
-    public DeleteResponse deleteNoteBy(DeleteNoteRequest deleteNoteRequest) {
+    public DeleteNoteResponse deleteNoteBy(DeleteNoteRequest deleteNoteRequest) {
         User user = findByUsername(deleteNoteRequest.getUsername());
         validateLogin(user.getUsername());
         Note note = findNoteBy(deleteNoteRequest.getUsername(), deleteNoteRequest.getTitle());
@@ -95,7 +96,22 @@ public class NoteServiceImpl implements NoteService{
         Note note = findNoteBy(updateNoteRequest.getUsername(), updateNoteRequest.getTitle());
         note.setTitle(updateNoteRequest.getTitle());
         note.setContent(updateNoteRequest.getContent());
-        noteRepository.save(note);
+        List<Note> notes = user.getNotes();
+        for (Note userNote : notes) {
+            if (userNote.getTitle().equals(note.getTitle())) {
+                notes.remove(userNote);
+                //here
+                noteRepository.save(note);
+                // here
+                notes.add(note);
+                user.setNotes(notes);
+                userRepository.save(user);
+            }
+        }
+        /*note.setTitle(updateNoteRequest.getTitle());
+        note.setContent(updateNoteRequest.getContent());
+
+        noteRepository.save(note); */
         return mapUpdateNoteResponse(note);
     }
 

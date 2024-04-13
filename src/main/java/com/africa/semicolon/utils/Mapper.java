@@ -72,8 +72,8 @@ public class Mapper {
         return response;
     }
 
-    public static DeleteResponse mapDeleteNoteResponse(Note note){
-        DeleteResponse response = new DeleteResponse();
+    public static DeleteNoteResponse mapDeleteNoteResponse(Note note){
+        DeleteNoteResponse response = new DeleteNoteResponse();
         response.setMessage("Note Deleted successfully");
         return response;
     }

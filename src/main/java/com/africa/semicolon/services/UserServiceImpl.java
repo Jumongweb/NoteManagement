@@ -67,9 +67,11 @@ public class UserServiceImpl implements  UserService {
     }
 
     @Override
-    public UpdateUserResponse updateUser(String username, String password, UpdateUserRequest update) {
-        User user = findByUsername(username);
-        if (!(user.getPassword().equals(password))) { throw new InvalidPasswordException("Invalid password");}
+    public UpdateUserResponse updateUser(UpdateUserRequest update) {
+        User user = findByUsername(update.getUsername());
+        if (!(user.getPassword().equals(update.getPassword()))) {
+            throw new InvalidPasswordException("Invalid password");
+        }
         user.setUsername(update.getUsername());
         user.setFirstName(update.getFirstName());
         user.setLastName(update.getLastName());
