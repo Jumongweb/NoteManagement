@@ -60,6 +60,47 @@ public class NoteServiceImplTest {
     }
 
     @Test
+    public void testThatTwoUsersCanHaveANotWithSameTitle() {
+        RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
+        registerUserRequest1.setUsername("username1");
+        registerUserRequest1.setPassword("password");
+        registerUserRequest1.setFirstName("firstName");
+        registerUserRequest1.setLastName("lastName");
+        userService.register(registerUserRequest1);
+
+        RegisterUserRequest registerUserRequest2 = new RegisterUserRequest();
+        registerUserRequest2.setUsername("username2");
+        registerUserRequest2.setPassword("password");
+        registerUserRequest2.setFirstName("firstName");
+        registerUserRequest2.setLastName("lastName");
+        userService.register(registerUserRequest2);
+
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setUsername("username1");
+        loginRequest.setPassword("password");
+        userService.login(loginRequest);
+        LoginRequest loginRequest2 = new LoginRequest();
+        loginRequest2.setUsername("username2");
+        loginRequest2.setPassword("password");
+        userService.login(loginRequest2);
+
+        AddNoteRequest addNoteRequest = new AddNoteRequest();
+        addNoteRequest.setUsername("username1");
+        addNoteRequest.setTitle("title");
+        addNoteRequest.setContent("Content of the note");
+        noteService.addNote(addNoteRequest);
+
+        AddNoteRequest addNoteRequest2 = new AddNoteRequest();
+        addNoteRequest2.setUsername("username2");
+        addNoteRequest2.setTitle("title");
+        addNoteRequest2.setContent("Content of the note");
+        noteService.addNote(addNoteRequest2);
+        assertEquals(2, noteService.count());
+        assertEquals(1, noteService.findByUsername("username1").getNotes().size());
+        assertEquals(1, noteService.findByUsername("username2").getNotes().size());
+    }
+
+    @Test
     public void testThatNoteServiceCannotAddNoteWithSameTitle() {
         RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
         registerUserRequest1.setUsername("username1");

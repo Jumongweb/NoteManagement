@@ -9,7 +9,6 @@ import com.africa.semicolon.dtos.request.DeleteNoteRequest;
 import com.africa.semicolon.dtos.request.UpdateNoteRequest;
 import com.africa.semicolon.dtos.response.AddNoteResponse;
 import com.africa.semicolon.dtos.response.DeleteNoteResponse;
-import com.africa.semicolon.dtos.response.DeleteResponse;
 import com.africa.semicolon.dtos.response.UpdateNoteResponse;
 import com.africa.semicolon.exceptions.LoginException;
 import com.africa.semicolon.exceptions.NoteExistException;
@@ -33,7 +32,7 @@ public class NoteServiceImpl implements NoteService{
     @Override
     public AddNoteResponse addNote(AddNoteRequest addNoteRequest) {
         Note note = mapAddNote(addNoteRequest);
-        validateNote(note.getTitle());
+        validateNote(addNoteRequest.getUsername(), note.getTitle());
         User user = findByUsername(note.getUsername());
         validateLogin(user.getUsername());
         noteRepository.save(note);
@@ -115,15 +114,23 @@ public class NoteServiceImpl implements NoteService{
         return mapUpdateNoteResponse(note);
     }
 
+    public List<Note> getAllNotes() {
+        return noteRepository.findAll();
+    }
+
 
     private void validateLogin(String username) {
         User user = userRepository.findByUsername(username);
         if (!(user.isLoggedIn())) throw new LoginException("You need to be logged in to use this service");
     }
 
-    private void validateNote(String title) {
-        for (Note note : noteRepository.findAll()){
+    private void validateNote(String username, String title) {
+        for (Note note : noteRepository.findNoteByUsername(username)){
             if (note.getTitle().equals(title)) throw new NoteExistException("Note already exist with the same title");
         }
+
+//        for (Note note : noteRepository.findAll()){
+//            if (note.getTitle().equals(title)) throw new NoteExistException("Note already exist with the same title");
+//        }
     }
 }

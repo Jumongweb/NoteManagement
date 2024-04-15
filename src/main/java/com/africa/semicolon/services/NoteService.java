@@ -28,4 +28,6 @@ public interface NoteService {
     DeleteNoteResponse deleteNoteBy(DeleteNoteRequest deleteNoteRequest);
 
     UpdateNoteResponse updateNoteBy(UpdateNoteRequest updateNoteRequest);
+
+    List<Note> getAllNotes();
 }

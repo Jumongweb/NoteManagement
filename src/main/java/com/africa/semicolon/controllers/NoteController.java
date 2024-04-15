@@ -1,6 +1,4 @@
 package com.africa.semicolon.controllers;
-
-import com.africa.semicolon.data.model.Note;
 import com.africa.semicolon.dtos.request.AddNoteRequest;
 import com.africa.semicolon.dtos.request.DeleteNoteRequest;
 import com.africa.semicolon.dtos.request.UpdateNoteRequest;
@@ -57,6 +55,15 @@ public class NoteController {
             UpdateNoteResponse response = noteService.updateNoteBy(updateNoteRequest);
             return new ResponseEntity<>(new ApiResponse(true, response), HttpStatus.OK);
         } catch (NoteManagementException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("getAllNotes")
+    public ResponseEntity<?> getAllNotes(){
+        try{
+            return new ResponseEntity<>(new ApiResponse(true, noteService.getAllNotes()), HttpStatus.OK);
+        } catch (NoteManagementException e){
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
