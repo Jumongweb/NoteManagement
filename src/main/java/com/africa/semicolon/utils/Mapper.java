@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 public class Mapper {
     public static User mapRegisterUser(RegisterUserRequest registerUserRequest) {
         User user = new User();
-        user.setUsername(registerUserRequest.getUsername());
+        user.setUsername(registerUserRequest.getUsername().toLowerCase());
         user.setPassword(registerUserRequest.getPassword());
         user.setFirstName(registerUserRequest.getFirstName());
         user.setLastName(registerUserRequest.getLastName());

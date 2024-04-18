@@ -26,7 +26,7 @@ public class UserServiceImpl implements  UserService {
     private NoteRepository noteRepository;
     @Override
     public RegisterUserResponse register(RegisterUserRequest registerUserRequest) {
-        String username = registerUserRequest.getUsername();
+        String username = registerUserRequest.getUsername().toLowerCase();
         validate(username);
         User user = mapRegisterUser(registerUserRequest);
         User savedUser = userRepository.save(user);

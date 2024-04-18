@@ -68,4 +68,13 @@ public class NoteController {
         }
     }
 
+    @GetMapping("findAllUserNote/{username}")
+    public ResponseEntity<?> findAllUserNote(@PathVariable("username") String username){
+        try {
+            return new ResponseEntity<>(new ApiResponse(true, noteService.findAllNotesBelongingToUser(username)), HttpStatus.OK);
+        } catch (NoteManagementException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
