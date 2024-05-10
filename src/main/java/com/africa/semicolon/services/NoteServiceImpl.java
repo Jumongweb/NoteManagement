@@ -6,9 +6,11 @@ import com.africa.semicolon.data.repositories.NoteRepository;
 import com.africa.semicolon.data.repositories.UserRepository;
 import com.africa.semicolon.dtos.request.AddNoteRequest;
 import com.africa.semicolon.dtos.request.DeleteNoteRequest;
+import com.africa.semicolon.dtos.request.ShareNoteRequest;
 import com.africa.semicolon.dtos.request.UpdateNoteRequest;
 import com.africa.semicolon.dtos.response.AddNoteResponse;
 import com.africa.semicolon.dtos.response.DeleteNoteResponse;
+import com.africa.semicolon.dtos.response.ShareNoteResponse;
 import com.africa.semicolon.dtos.response.UpdateNoteResponse;
 import com.africa.semicolon.exceptions.LoginException;
 import com.africa.semicolon.exceptions.NoteExistException;
@@ -33,7 +35,7 @@ public class NoteServiceImpl implements NoteService{
     public AddNoteResponse addNote(AddNoteRequest addNoteRequest) {
         Note note = mapAddNote(addNoteRequest);
         validateNote(addNoteRequest.getUsername(), note.getTitle());
-        User user = findByUsername(note.getUsername());
+        User user = userRepository.findByUsername(note.getUsername());
         validateLogin(user.getUsername());
         noteRepository.save(note);
         List<Note> userNote = user.getNotes();
@@ -93,6 +95,7 @@ public class NoteServiceImpl implements NoteService{
         validateLogin(updateNoteRequest.getUsername());
         User user = findByUsername(updateNoteRequest.getUsername());
         Note note = findNoteBy(updateNoteRequest.getUsername(), updateNoteRequest.getTitle());
+        note.setId(note.getId());
         note.setTitle(updateNoteRequest.getTitle());
         note.setContent(updateNoteRequest.getContent());
         List<Note> notes = user.getNotes();
@@ -116,6 +119,30 @@ public class NoteServiceImpl implements NoteService{
 
     public List<Note> getAllNotes() {
         return noteRepository.findAll();
+    }
+
+    @Override
+    public ShareNoteResponse shareNote(ShareNoteRequest shareNoteRequest) {
+        String sender = shareNoteRequest.getSender();
+        String receiver = shareNoteRequest.getReceiver();
+        String title = shareNoteRequest.getTitle();
+        Note note = findNoteBy(sender, title);
+
+        User noteSender = findByUsername(sender);
+        User noteReceiver = findByUsername(receiver);
+        List<Note> senderNotes = noteSender.getSharedNotes();
+        List<Note> receiverNotes = noteReceiver.getReceivedNotes();
+
+        if (senderNotes == null) { senderNotes = new ArrayList<>(); }
+        if (receiverNotes == null) { receiverNotes = new ArrayList<>(); }
+
+        senderNotes.add(note);
+        receiverNotes.add(note);
+        noteSender.setSharedNotes(senderNotes);
+        noteReceiver.setReceivedNotes(receiverNotes);
+        userRepository.save(noteSender);
+        userRepository.save(noteReceiver);
+        return mapSharedNoteResponse();
     }
 
 

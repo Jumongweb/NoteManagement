@@ -1,6 +1,7 @@
 package com.africa.semicolon.controllers;
 import com.africa.semicolon.dtos.request.AddNoteRequest;
 import com.africa.semicolon.dtos.request.DeleteNoteRequest;
+import com.africa.semicolon.dtos.request.ShareNoteRequest;
 import com.africa.semicolon.dtos.request.UpdateNoteRequest;
 import com.africa.semicolon.dtos.response.AddNoteResponse;
 import com.africa.semicolon.dtos.response.ApiResponse;
@@ -76,5 +77,15 @@ public class NoteController {
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("shareNote")
+    public ResponseEntity<?> shareNote(@RequestBody ShareNoteRequest shareNoteRequest){
+        try {
+            return new ResponseEntity<>(new ApiResponse(true, noteService.shareNote(shareNoteRequest)), HttpStatus.OK);
+        } catch (NoteManagementException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 }

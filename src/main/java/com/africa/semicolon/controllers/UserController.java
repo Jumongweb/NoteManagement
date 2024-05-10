@@ -12,13 +12,17 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/note")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @PostMapping("register")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterUserRequest registerUserRequest){
+        System.out.println(registerUserRequest);
+
+
         try{
             RegisterUserResponse response = userService.register(registerUserRequest);
             return new ResponseEntity<>(new ApiResponse(true, response), HttpStatus.CREATED);

@@ -1,6 +1,7 @@
 package com.africa.semicolon.services;
 
 import com.africa.semicolon.data.model.Note;
+import com.africa.semicolon.data.model.User;
 import com.africa.semicolon.data.repositories.NoteRepository;
 import com.africa.semicolon.data.repositories.UserRepository;
 import com.africa.semicolon.dtos.request.*;
@@ -60,7 +61,7 @@ public class NoteServiceImplTest {
     }
 
     @Test
-    public void testThatTwoUsersCanHaveANotWithSameTitle() {
+    public void testThatTwoUsersCanHaveANoteWithSameTitle() {
         RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
         registerUserRequest1.setUsername("username1");
         registerUserRequest1.setPassword("password");
@@ -342,6 +343,67 @@ public class NoteServiceImplTest {
 
         assertEquals(1, noteService.count());
         assertEquals(1, noteService.findByUsername("username1").getNotes().size());
+    }
+
+    @Test
+    public void testThatNoteServiceCanShareNote(){
+        RegisterUserRequest registerUserRequest1 = new RegisterUserRequest();
+        registerUserRequest1.setUsername("username1");
+        registerUserRequest1.setPassword("password");
+        registerUserRequest1.setFirstName("firstName");
+        registerUserRequest1.setLastName("lastName");
+        userService.register(registerUserRequest1);
+
+        LoginRequest loginRequest1 = new LoginRequest();
+        loginRequest1.setUsername("username1");
+        loginRequest1.setPassword("password");
+        userService.login(loginRequest1);
+
+        AddNoteRequest addNoteRequest1 = new AddNoteRequest();
+        addNoteRequest1.setUsername("username1");
+        addNoteRequest1.setTitle("title1");
+        addNoteRequest1.setContent("Content of the note");
+        noteService.addNote(addNoteRequest1);
+        assertEquals("Content of the note", noteService.findNoteBy("username1", "title1").getContent());
+        assertEquals(1, noteService.count());
+
+        RegisterUserRequest registerUserRequest2 = new RegisterUserRequest();
+        registerUserRequest2.setUsername("username2");
+        registerUserRequest2.setPassword("password");
+        registerUserRequest2.setFirstName("firstName");
+        registerUserRequest2.setLastName("lastName");
+        userService.register(registerUserRequest2);
+
+        LoginRequest loginRequest2 = new LoginRequest();
+        loginRequest2.setUsername("username2");
+        loginRequest2.setPassword("password");
+        userService.login(loginRequest2);
+
+        ShareNoteRequest shareNoteRequest = new ShareNoteRequest();
+        shareNoteRequest.setSender("username1");
+        shareNoteRequest.setReceiver("username2");
+        shareNoteRequest.setTitle("title1");
+        noteService.shareNote(shareNoteRequest);
+        assertEquals(1, noteService.count());
+
+        assertEquals(1, noteService.findByUsername("username1").getSharedNotes().size());
+        assertEquals(1, noteService.findByUsername("username2").getReceivedNotes().size());
+        User user1 = userService.findByUsername("username1");
+        User user2 = userService.findByUsername("username2");
+        System.out.println(user1);
+        System.out.println(user2);
+
+        UpdateNoteRequest updateNoteRequest = new UpdateNoteRequest();
+        updateNoteRequest.setUsername("username1");
+        updateNoteRequest.setTitle("title1");
+        updateNoteRequest.setContent("new Content");
+        noteService.updateNoteBy(updateNoteRequest);
+
+        user1 = userService.findByUsername("username1");
+        user2 = userService.findByUsername("username2");
+        System.out.println(user1);
+        System.out.println(user2);
+
     }
 
 }

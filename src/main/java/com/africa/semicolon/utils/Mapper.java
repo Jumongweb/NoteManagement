@@ -84,4 +84,9 @@ public class Mapper {
         return response;
     }
 
+    public static ShareNoteResponse mapSharedNoteResponse(){
+        ShareNoteResponse response = new ShareNoteResponse();
+        response.setMessage("Note Shared successfully");
+        return response;
+    }
 }

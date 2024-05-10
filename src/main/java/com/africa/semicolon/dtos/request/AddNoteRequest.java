@@ -1,5 +1,6 @@
 package com.africa.semicolon.dtos.request;
 
+import com.africa.semicolon.data.model.User;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
